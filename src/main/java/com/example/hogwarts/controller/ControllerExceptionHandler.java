@@ -18,19 +18,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(StudentNotFoundException.class)
-    public ResponseEntity<String> handleNonFoundException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(FacultyNotFoundException.class)
+    @ExceptionHandler({FacultyNotFoundException.class,StudentNotFoundException.class,AvatarNotFoundException.class})
     public ResponseEntity<String> handleNotFoundException(RuntimeException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
-
-    @ExceptionHandler(AvatarNotFoundException.class)
-    public ResponseEntity<String> handleNoFoundException(RuntimeException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
 }

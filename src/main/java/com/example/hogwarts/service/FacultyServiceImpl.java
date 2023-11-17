@@ -24,7 +24,7 @@ public class FacultyServiceImpl implements FacultyService {
     @Override
     public Faculty getFaculty(long id) {
         return facultyRepository.findById(id)
-                .orElseThrow(() -> new FacultyNotFoundException("Факультет с id " + id + " не найден в хранилище"));
+                .orElseThrow(() -> new FacultyNotFoundException("Факультет не найден в хранилище"));
     }
 
     @Override
