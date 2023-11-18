@@ -56,7 +56,9 @@ public class FacultyControllerWebMvcTest {
 
     @Test
     void update_shouldReturnFacultyAndStatus200() throws Exception {
-        Faculty faculty1 = new Faculty(1L, "Gryfindor", "green");
+        Faculty faculty1 = new Faculty(1L, "22222", "green");
+        when((facultyRepository.findById(faculty.getId())))
+                .thenReturn(Optional.of(faculty));
         when(facultyRepository.save(faculty1)).thenReturn(faculty1);
 
         mockMvc.perform(put("/faculty")

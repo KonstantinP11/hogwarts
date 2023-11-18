@@ -13,7 +13,6 @@ public class Student {
     private int age;
 
 
-
     @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
@@ -26,6 +25,7 @@ public class Student {
         this.name = name;
         this.age = age;
     }
+
     public Faculty getFaculty() {
         return faculty;
     }
@@ -33,6 +33,7 @@ public class Student {
     public void setFaculty(Faculty faculty) {
         this.faculty = faculty;
     }
+
     public Long getId() {
         return id;
     }
@@ -62,11 +63,11 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return age == student.age && Objects.equals(id, student.id) && Objects.equals(name, student.name);
+        return age == student.age && Objects.equals(name, student.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, age);
+        return Objects.hash(name, age);
     }
 }

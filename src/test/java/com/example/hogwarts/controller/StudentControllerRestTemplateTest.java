@@ -56,10 +56,21 @@ public class StudentControllerRestTemplateTest {
     @Test
     void update_shouldReturnStudentAndStatus200() {
         Student saveStudent = studentRepository.save(student);
-
         ResponseEntity<Student> result = restTemplate.exchange(
                 baseUrl,
                 HttpMethod.PUT,
+                new HttpEntity<>(saveStudent),
+                Student.class);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(saveStudent, result.getBody());
+    }
+
+    @Test
+    void delete_shouldReturnStudent() {
+        Student saveStudent = studentRepository.save(student);
+        ResponseEntity<Student> result = restTemplate.exchange(
+                baseUrl + "/" + saveStudent.getId(),
+                HttpMethod.DELETE,
                 new HttpEntity<>(saveStudent),
                 Student.class);
         assertEquals(HttpStatus.OK, result.getStatusCode());

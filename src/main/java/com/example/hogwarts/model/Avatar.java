@@ -14,7 +14,7 @@ public class Avatar {
     private String mediaType;
     private byte[] data;
     @OneToOne
-//    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id")
     private Student student;
     public Avatar() {
     }
