@@ -2,6 +2,7 @@ package com.example.hogwarts.service;
 
 import com.example.hogwarts.model.Avatar;
 import com.example.hogwarts.model.Student;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -19,4 +20,6 @@ public interface AvatarService {
     Avatar readFromDb(long id);
 
     File readFromFile(long id) throws IOException;
+
+    Page<Avatar> getAllAvatars(Integer pageNo, Integer pageSize);
 }
