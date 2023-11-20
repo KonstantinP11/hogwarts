@@ -5,6 +5,9 @@ import com.example.hogwarts.model.Avatar;
 import com.example.hogwarts.model.Student;
 import com.example.hogwarts.repository.AvatarRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -80,4 +83,11 @@ public class AvatarServiceImpl implements AvatarService {
     private String getExtensions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
+
+    @Override
+    public Page<Avatar> getAllAvatars(Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        return avatarRepository.findAll(paging);
+    }
+
 }
