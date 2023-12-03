@@ -4,6 +4,8 @@ import com.example.hogwarts.exception.AvatarNotFoundException;
 import com.example.hogwarts.model.Avatar;
 import com.example.hogwarts.model.Student;
 import com.example.hogwarts.repository.AvatarRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class AvatarServiceImpl implements AvatarService {
+    Logger logger = LoggerFactory.getLogger(AvatarServiceImpl.class);
 
     private final String avatarsDir;
 
@@ -35,6 +38,7 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
+        logger.info("Был вызван метод записи аватара в файл и базу данных", studentId);
         Student student = studentService.getStudent(studentId);
         Path filePath = saveToFile(student, avatarFile);
         saveToDb(student, filePath, avatarFile);
@@ -42,6 +46,7 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public Path saveToFile(Student student, MultipartFile avatarFile) throws IOException {
+        logger.info("Был вызван метод записи аватара в файл", student.getId());
         Path filePath = Path.of(avatarsDir, student.getId() + "."
                 + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -53,12 +58,14 @@ public class AvatarServiceImpl implements AvatarService {
                 BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
         ) {
             bis.transferTo(bos);
+            logger.debug("аватар был записан в файл id = " + student.getId());
         }
         return filePath;
     }
 
     @Override
     public void saveToDb(Student student, Path filePath, MultipartFile avatarFile) throws IOException {
+        logger.info("Был вызван метод записи аватара в базу данных", student.getId());
         Avatar avatar = avatarRepository.findByStudent_id(student.getId()).orElse(new Avatar());
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
@@ -70,22 +77,26 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public Avatar readFromDb(long id) {
+        logger.info("Был вызван метод чтения аватара из базы данных", id);
         return avatarRepository.findById(id)
                 .orElseThrow(() -> new AvatarNotFoundException("Аватар не найден"));
     }
 
     @Override
     public File readFromFile(long id) throws IOException {
+        logger.info("Был вызван метод чтения аватара из файла",id);
         Avatar avatar = readFromDb(id);
         return new File(avatar.getFilePath());
     }
 
     private String getExtensions(String fileName) {
+        logger.info("Был вызван метод получения расширения файла");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     @Override
     public Page<Avatar> getAllAvatars(Integer pageNo, Integer pageSize) {
+        logger.info("Был вызван метод получения всех аватаров");
         Pageable paging = PageRequest.of(pageNo, pageSize);
         return avatarRepository.findAll(paging);
     }
