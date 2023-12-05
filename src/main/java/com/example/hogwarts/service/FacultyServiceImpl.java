@@ -5,10 +5,13 @@ import com.example.hogwarts.model.Faculty;
 import com.example.hogwarts.repository.FacultyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Optional;
 
 @Service
 public class FacultyServiceImpl implements FacultyService {
@@ -17,7 +20,9 @@ public class FacultyServiceImpl implements FacultyService {
     public FacultyServiceImpl(FacultyRepository facultyRepository) {
         this.facultyRepository = facultyRepository;
     }
+
     Logger logger = LoggerFactory.getLogger(FacultyServiceImpl.class);
+
     @Override
     public Faculty addFaculty(Faculty faculty) {
         logger.info("Was invoked method for create faculty");
@@ -59,8 +64,17 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public Collection<Faculty>  findFacultyByColorIgnoreCase(String color) {
+    public Collection<Faculty> findFacultyByColorIgnoreCase(String color) {
         logger.info("Was invoked method for get faculty by color ignore case");
         return facultyRepository.findAllByColorIgnoreCase(color);
+    }
+@Override
+    public ResponseEntity<String> getFacultyNameMaxLength() {
+        Optional<String> facultyNameMaxLength = facultyRepository.findAll()
+                .stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparing(String::length));
+        return facultyNameMaxLength.map(ResponseEntity::ok).
+                orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
