@@ -1,6 +1,7 @@
 package com.example.hogwarts.service;
 
 import com.example.hogwarts.model.Faculty;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -21,4 +22,6 @@ public interface FacultyService {
     Collection<Faculty> findFacultyByNameIgnoreCase(String name);
 
     Collection<Faculty>  findFacultyByColorIgnoreCase(String color);
+
+    ResponseEntity<String> getFacultyNameMaxLength();
 }

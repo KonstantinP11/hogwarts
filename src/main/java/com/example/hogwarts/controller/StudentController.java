@@ -2,17 +2,21 @@ package com.example.hogwarts.controller;
 
 import com.example.hogwarts.model.Faculty;
 import com.example.hogwarts.model.Student;
+import com.example.hogwarts.repository.StudentRepository;
 import com.example.hogwarts.service.StudentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
-
+    private StudentRepository studentRepository;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -57,5 +61,19 @@ public class StudentController {
     @GetMapping("/facultyId")
     public Collection<Student> readByFacultyId(@RequestParam long facultyId) {
         return studentService.readByFacultyId(facultyId);
+    }
+
+    @GetMapping("/filteredStudentNames")
+    public ResponseEntity<Collection<String>> getStudentNamesStartByA() {
+        Collection<String> stringCollection = studentService.getFilterByName();
+        if (stringCollection.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(stringCollection);
+    }
+
+    @GetMapping("/getAllStudentsAvgAge")
+    public Double getAllStudentsAvgAge() {
+        return studentService.getAllStudentsAvgAge();
     }
 }

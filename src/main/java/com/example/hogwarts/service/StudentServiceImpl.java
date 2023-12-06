@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -71,5 +72,21 @@ public class StudentServiceImpl implements StudentService {
     public Collection<Student> readByFacultyId(long facultyId) {
         logger.info("Was invoked method for get students by faculty");
         return studentRepository.findAllByFaculty_id(facultyId);
+    }
+    @Override
+    public Collection<String> getFilterByName() {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(s -> s.startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+@Override
+    public Double getAllStudentsAvgAge() {
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
     }
 }
