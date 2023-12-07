@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/student")
 public class StudentController {
     private final StudentService studentService;
-    private StudentRepository studentRepository;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
@@ -75,5 +74,13 @@ public class StudentController {
     @GetMapping("/getAllStudentsAvgAge")
     public Double getAllStudentsAvgAge() {
         return studentService.getAllStudentsAvgAge();
+    }
+    @GetMapping("/getStudentsInParallelStream")
+    public void getNamesInStreams() {
+        studentService.getNamesInStreams();
+    }
+    @GetMapping("/getStudentsInParallelStreamSynchronized")
+    public void getNamesInStreamsSynchronized() {
+        studentService.getNamesInStreamsSynchronized();
     }
 }

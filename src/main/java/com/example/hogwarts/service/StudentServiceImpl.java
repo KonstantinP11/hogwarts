@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +21,7 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
+
     @Override
     public Student addStudent(Student student) {
         logger.info("Was invoked method for create student");
@@ -73,6 +75,7 @@ public class StudentServiceImpl implements StudentService {
         logger.info("Was invoked method for get students by faculty");
         return studentRepository.findAllByFaculty_id(facultyId);
     }
+
     @Override
     public Collection<String> getFilterByName() {
         return studentRepository.findAll().stream()
@@ -82,11 +85,57 @@ public class StudentServiceImpl implements StudentService {
                 .sorted()
                 .collect(Collectors.toList());
     }
-@Override
+
+    @Override
     public Double getAllStudentsAvgAge() {
         return studentRepository.findAll().stream()
                 .mapToInt(Student::getAge)
                 .average()
                 .orElse(0);
     }
+
+    @Override
+    public void getNamesInStreams() {
+        List<String> names = getNamesStudents();
+        System.out.println(names.get(0));
+        System.out.println(names.get(1));
+
+        new Thread(() -> {
+            System.out.println(names.get(2));
+            System.out.println(names.get(3));
+        })
+                .start();
+        new Thread(() -> {
+            System.out.println(names.get(4));
+            System.out.println(names.get(5));
+        })
+                .start();
+    }
+
+    public List<String> getNamesStudents() {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .collect(Collectors.toList());
+    }
+@Override
+    public void getNamesInStreamsSynchronized() {
+        List<String> names = getNamesStudents();
+        synchronized (this) {
+
+            System.out.println(names.get(0));
+            System.out.println(names.get(1));
+
+            new Thread(() -> {
+                System.out.println(names.get(2));
+                System.out.println(names.get(3));
+            })
+                    .start();
+            new Thread(() -> {
+                System.out.println(names.get(4));
+                System.out.println(names.get(5));
+            })
+                    .start();
+        }
+    }
+
 }
